@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FamilyTree.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:mvvm="using:FamilyTree.MVVM"
+    FlyoutBehavior="Disabled"
+    BackgroundColor="{DynamicResource PrimaryBackground}">
+
+    <Shell.Resources>
+        <Style x:Key="BasePageHeaderStyle" TargetType="Tab">
+            <Setter Property="Shell.BackgroundColor" Value="{DynamicResource Secondary}" />
+            <Setter Property="Shell.TitleColor" Value="{DynamicResource DarkTextColor}"/>
+            <Setter Property="Shell.TabBarBackgroundColor" Value="{DynamicResource Secondary}"/>
+            <Setter Property="Shell.TabBarUnselectedColor" Value="DarkGray"/>
+            <Setter Property="Shell.TabBarForegroundColor" Value="Black"/>
+            <Setter Property="Style" Value="{DynamicResource MediumFontSize}"/>
+        </Style>
+    </Shell.Resources>
+
+    <TabBar>
+        <Tab Title="Home" Style="{DynamicResource BasePageHeaderStyle}" Route="MainPage">
+            <ShellContent ContentTemplate="{DataTemplate mvvm:MainPage}"/>
+        </Tab>
+        <Tab Title="People" Style="{DynamicResource BasePageHeaderStyle}" Route="PeopleEditorPage">
+            <ShellContent ContentTemplate="{DataTemplate mvvm:PeopleEditorPage}"/>
+        </Tab>
+        <Tab Title="Family Tree" Style="{DynamicResource BasePageHeaderStyle}" Route="FamilyTreePage">
+            <ShellContent ContentTemplate="{DataTemplate mvvm:FamilyTreePage}"/>
+        </Tab>
+    </TabBar>
+</Shell>

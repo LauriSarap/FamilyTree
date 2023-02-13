@@ -1,0 +1,38 @@
+{
+  "50410242752": {
+    "name": "Lauri Sarap",
+    "personalId": 50410242752,
+    "spouseId": 0,
+    "childrenIds": []
+  },
+  "60708202732": {
+    "name": "Katarina Sarap",
+    "personalId": 60708202732,
+    "spouseId": 0,
+    "childrenIds": []
+  },
+  "36912062745": {
+    "name": "Aivar Sarap",
+    "personalId": 36912062745,
+    "spouseId": 47201042756,
+    "childrenIds": [
+      50410242752,
+      60708202732
+    ]
+  },
+  "47201042756": {
+    "name": "Marika Sarap",
+    "personalId": 47201042756,
+    "spouseId": 36912062745,
+    "childrenIds": [
+      50410242752,
+      60708202732
+    ]
+  },
+  "50237777777": {
+    "name": "MariTamm",
+    "personalId": 50237777777,
+    "spouseId": 50410242752,
+    "childrenIds": []
+  }
+}
