@@ -65,6 +65,18 @@
                 <Setter Property="BackgroundColor" Value="{DynamicResource Secondary}"/>
                 <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
                 <Setter Property="TextColor" Value="{DynamicResource DarkTextColor}"/>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup>
+                            <VisualState x:Name="Normal"/>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{DynamicResource Secondary}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
             </Style>
 
             <Style x:Key="SmallButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">

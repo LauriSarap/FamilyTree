@@ -35,18 +35,18 @@ namespace FamilyTree.Logic
             PersonDatabase.filePath = dbFilePath;
         }
 
-        public static void UpdatePeopleList()
+        public static async Task UpdatePeopleList()
         {
             people.Clear();
-            people = PersonDatabase.LoadAllPersons();
+            people = await PersonDatabase.LoadAllPersons();
         }
 
-        public static void AddPerson(Person newPerson)
+        public static async Task AddPerson(Person newPerson)
         {
-            PersonDatabase.AddPerson(newPerson);
-            AddSpouse(newPerson.spouseId, newPerson.personalId);
+            await PersonDatabase.AddPerson(newPerson);
+            await AddSpouse(newPerson.spouseId, newPerson.personalId);
 
-            UpdatePeopleList();
+            await UpdatePeopleList();
         }
 
         public static bool DoesPersonExist(string personalId)
@@ -61,7 +61,7 @@ namespace FamilyTree.Logic
             return false;
         }
 
-        private static void AddSpouse(long spouseId, long personalId)
+        private static async Task AddSpouse(long spouseId, long personalId)
         {
             if (spouseId != 0)
             {
@@ -69,8 +69,7 @@ namespace FamilyTree.Logic
                 {
                     if (id == spouseId)
                     {
-                        Console.WriteLine("Found spouse with id: " + id + "!");
-                        PersonDatabase.AddSpouseToPerson(id, personalId);
+                        await PersonDatabase.AddSpouseToPerson(id, personalId);
                     }
                 }
             }

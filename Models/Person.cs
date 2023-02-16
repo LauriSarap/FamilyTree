@@ -3,9 +3,9 @@ namespace FamilyTree.Models
 {
     public class Person
     {
-        public string name;
-        public long personalId;
-        public long spouseId;
-        public long[] childrenIds;
+        public string name { get; set; }
+        public long personalId {get; set; }
+        public long spouseId { get; set; }
+        public long[] childrenIds { get; set; }
     }
 }

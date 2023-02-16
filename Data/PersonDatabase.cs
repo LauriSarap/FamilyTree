@@ -15,41 +15,42 @@ namespace FamilyTree.Data
         }
 
 
-        public static Dictionary<long, Person> LoadAllPersons()
+        public static async Task<Dictionary<long, Person>> LoadAllPersons()
         {
-            string json = File.ReadAllText(filePath);
+            string json = await File.ReadAllTextAsync(filePath);
             Dictionary<long, Person> people = JsonConvert.DeserializeObject<Dictionary<long, Person>>(json);
             return people;
         }
 
-        public static void AddPerson(Person newPerson)
+        public static async Task AddPerson(Person newPerson)
         {
-            string json = File.ReadAllText(filePath);
+            string json = await File.ReadAllTextAsync(filePath);
             Dictionary<long, Person> people = JsonConvert.DeserializeObject<Dictionary<long, Person>>(json);
 
             people[newPerson.personalId] = newPerson;
 
             string updatedJson = JsonConvert.SerializeObject(people, Formatting.Indented);
-            File.WriteAllText(filePath, updatedJson);
+            await File.WriteAllTextAsync(filePath, updatedJson);
         }
 
-        public static void AddSpouseToPerson(long personId, long spouseId)
+        public static async Task AddSpouseToPerson(long personId, long spouseId)
         {
-            string json = File.ReadAllText(filePath);
+            string json = await File.ReadAllTextAsync(filePath);
             Dictionary<long, Person> people = JsonConvert.DeserializeObject<Dictionary<long, Person>>(json);
 
-            foreach (var person in people.Values)
+            people[personId].spouseId = spouseId;
+
+            if (spouseId != 0)
             {
-                Console.WriteLine("Person's name is: " + person.name);
-                Console.WriteLine("Person's id is: " + person.personalId);
-                Console.WriteLine("Person spouse's id is: " + person.spouseId);
+                var spouse = people.Values.FirstOrDefault(p => p.personalId == spouseId);
+                if (spouse != null)
+                {
+                    spouse.spouseId = personId;
+                }
             }
 
-            people[personId].spouseId = spouseId;
-            Console.WriteLine("Person " + people[personId] + "'s spouse id is: " + people[personId].spouseId);
-
             string updatedJson = JsonConvert.SerializeObject(people, Formatting.Indented);
-            File.WriteAllText(filePath, updatedJson);
+            await File.WriteAllTextAsync(filePath, updatedJson);
         }
     }
 }

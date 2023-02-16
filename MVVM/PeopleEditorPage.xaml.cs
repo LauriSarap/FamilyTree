@@ -1,27 +1,40 @@
-using System.Diagnostics;
+using System.Collections.ObjectModel;
 using FamilyTree.Logic;
 using FamilyTree.Models;
+using CommunityToolkit.Mvvm.Input;
 
 namespace FamilyTree.MVVM;
 
 public partial class PeopleEditorPage : ContentPage
 {
-	public PeopleEditorPage()
+    public ObservableCollection<Person> PersonCollection { get; set; } = new ();
+    public IAsyncRelayCommand GetPeopleCommand { get; }
+    public IAsyncRelayCommand SavePersonCommand { get; }
+    public IAsyncRelayCommand ResetFieldsCommand { get; }
+
+    public PeopleEditorPage()
 	{
 		InitializeComponent();
+
+        GetPeopleCommand = new AsyncRelayCommand(GetPeopleAsync);
+        SavePersonCommand = new AsyncRelayCommand(SavePersonAsync);
+        ResetFieldsCommand = new AsyncRelayCommand(ResetFieldsAsync);
+
+
+        BindingContext = this;
 	}
 
-    public void OnSearchBtnClicked(object sender, EventArgs e)
+    public async Task GetPeopleAsync()
     {
-		FamilyTreeManager.UpdatePeopleList();
-
+        await FamilyTreeManager.UpdatePeopleList();
+        PersonCollection.Clear();
         foreach (var person in FamilyTreeManager.people.Values)
         {
-            Debug.WriteLine(person.personalId);
-        }   
+            PersonCollection.Add(person);
+        }
     }
 
-    public void OnSaveBtnClicked(object sender, EventArgs e)
+    public async Task SavePersonAsync()
     {
         if (FieldsAreValid() == false)
         {
@@ -30,7 +43,7 @@ public partial class PeopleEditorPage : ContentPage
 
         if (FamilyTreeManager.DoesPersonExist(PersonIdEntry.Text))
         {
-            DisplayAlert("Error", "Person with this id already exists!", "OK");
+            await DisplayAlert("Error", "Person with this id already exists!", "OK");
             return;
         }
 
@@ -42,7 +55,22 @@ public partial class PeopleEditorPage : ContentPage
             childrenIds = new long[]{}
         };
 
-        FamilyTreeManager.AddPerson(newPerson);
+        await FamilyTreeManager.AddPerson(newPerson);
+
+        await DisplayAlert("Success", "Person added successfully!", "OK");
+    }
+
+    public async Task ResetFieldsAsync()
+    {
+        if (await DisplayAlert("Warning", "Are you sure you want to reset all fields?", "Yes", "No"))
+        {
+            PersonIdEntry.Text = String.Empty;
+            PersonNameEntry.Text = String.Empty;
+            SpouseIdEntry.Text = String.Empty;
+            ChildIdEntry.Text = String.Empty;
+            PersonSelectionList.SelectedItem = null;
+
+        }
     }
 
     public bool FieldsAreValid()
@@ -90,5 +118,40 @@ public partial class PeopleEditorPage : ContentPage
         }
 
         return true;
+    }
+
+    private void PersonSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        if (e.SelectedItem is Person person)
+        {
+            PersonIdEntry.Text = person.personalId.ToString();
+            PersonNameEntry.Text = person.name;
+
+            if (person.spouseId != 0)
+            {
+                SpouseIdEntry.Text = person.spouseId.ToString();
+            }
+            else
+            {
+                SpouseIdEntry.Text = String.Empty;
+            }
+
+            if (person.childrenIds.Length > 0)
+            {
+                string text = String.Empty;
+                foreach (var child in person.childrenIds)
+                {
+                    text += child.ToString() + ", ";
+                }
+
+                text = text.Remove(text.Length - 2);
+
+                ChildIdEntry.Text = text;
+            }
+            else
+            {
+                ChildIdEntry.Text = String.Empty;
+            }
+        }
     }
 }

@@ -2,12 +2,109 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FamilyTree.MVVM.FamilyTreePage"
+             xmlns:models="clr-namespace:FamilyTree.Models"
+             xmlns:mvvm="using:FamilyTree.MVVM"
+             x:DataType="mvvm:FamilyTreePage"
              Title="FamilyTreePage"
              BackgroundColor="{DynamicResource PrimaryBackground}">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <ScrollView VerticalScrollBarVisibility="Always">
+        <Grid ColumnDefinitions="300, 120, *" RowDefinitions="150, 300, 200, 150" Padding="10" HorizontalOptions="Fill" VerticalOptions="Center" RowSpacing="50">
+
+            <!--*** 1st column ***-->
+
+            <Frame Grid.Column="0" Grid.RowSpan="4" Style="{DynamicResource  BaseFrameStyle}" HorizontalOptions="Fill" Padding="10">
+                <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" HorizontalOptions="Fill" FontAttributes="Bold" Clicked="GetPeopleToListAsync" VerticalOptions="Start" HeightRequest="50"/>
+            </Frame>
+
+            <ListView Grid.Column="0" Grid.Row="1"
+                      ItemsSource="{Binding People}"
+                      SelectionMode="Single"
+                      VerticalScrollBarVisibility="Always"
+                      ItemSelected="PersonSelectedFromList"
+                      RowHeight="80">
+                 <ListView.ItemTemplate>
+                     <DataTemplate x:DataType="models:Person">
+                         <ViewCell>
+                             <VerticalStackLayout VerticalOptions="Fill">
+                                 <Label Style="{DynamicResource SmallLabel}" Text="{Binding name, StringFormat='• {0}'}"/>
+                                 <Label Style="{DynamicResource SmallLabel}" Text="{Binding personalId, StringFormat='  ID: {0}'}"/>
+                            </VerticalStackLayout>
+                         </ViewCell>
+                     </DataTemplate>
+                 </ListView.ItemTemplate>
+             </ListView>
+
+            <!--*** 2nd column ***-->
+
+            <Label Grid.Column="1" Grid.Row="0"  Text="Parents" Style="{DynamicResource MediumLabel}" Rotation="-90" TranslationX="-40" FontSize="30"/>
+            <VerticalStackLayout Grid.Column="1" Grid.Row="1" VerticalOptions="Center">
+                <Label Text="Person" Style="{DynamicResource MediumLabel}" HorizontalTextAlignment="Center" Rotation="-90" TranslationX="-40" FontSize="30"/>
+            </VerticalStackLayout>
+            <Label Grid.Column="1" Grid.Row="2" Text="Children" Style="{DynamicResource MediumLabel}" HorizontalTextAlignment="Center" Rotation="-90" TranslationX="-40" FontSize="30"/>
+            <Label Grid.Column="1" Grid.Row="3" Text="Grand children" Style="{DynamicResource MediumLabel}" HorizontalTextAlignment="Center" Rotation="-90" FontSize="30" TranslationX="-15"/>
+
+            <!--*** 3rd column ***-->
+
+            <!-- 1st row -->
+            <HorizontalStackLayout Grid.Column="2" Grid.Row="0" HorizontalOptions="Center" Spacing="100" TranslationX="-25">
+                <Border Style="{DynamicResource BaseBorderStyle}" HorizontalOptions="Fill">
+                    <VerticalStackLayout HorizontalOptions="Fill" WidthRequest="200" >
+                        <Label Text="Parent 1" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Style="{DynamicResource BaseBorderStyle}" HorizontalOptions="Fill">
+                    <VerticalStackLayout HorizontalOptions="Fill" WidthRequest="200">
+                        <Label Text="Parent 1" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </HorizontalStackLayout>
+
+            <!-- 2nd row -->
+
+            <HorizontalStackLayout Grid.Column="2" Grid.Row="1" HorizontalOptions="Center" Spacing="150" TranslationX="-30">
+                <Border Style="{DynamicResource BaseBorderStyle}" HeightRequest="250" WidthRequest="200">
+                    <VerticalStackLayout>
+                        <Label Text="Spouse" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Style="{DynamicResource BaseBorderStyle}">
+                    <VerticalStackLayout WidthRequest="300">
+                        <Label Text="Person" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Style="{DynamicResource BaseBorderStyle}" WidthRequest="200" HeightRequest="250">
+                    <VerticalStackLayout>
+                        <Label Text="Siblings" Style="{DynamicResource MediumLabel}" HorizontalTextAlignment="Center"/>
+                        <ListView ItemsSource="{Binding PersonsSiblings}"
+                                  SelectionMode="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Person">
+
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </VerticalStackLayout>
+                </Border>
+            </HorizontalStackLayout>
+
+            <!-- 3rd row -->
+            <CollectionView ItemsSource="{Binding PersonsChildren}" SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Person">
+                        <Frame Padding="10, 0, 10, 0" WidthRequest="200" HeightRequest="250">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding name}" Style="{DynamicResource SmallLabel}"/>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+        </Grid>
+    </ScrollView>
 </ContentPage>

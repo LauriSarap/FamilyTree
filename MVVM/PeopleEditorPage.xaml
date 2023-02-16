@@ -2,8 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FamilyTree.MVVM.PeopleEditorPage"
+             xmlns:models="clr-namespace:FamilyTree.Models"
+             xmlns:mvvm="using:FamilyTree.MVVM"
+             x:DataType="mvvm:PeopleEditorPage"
              Title="PeopleEditorPage"
              BackgroundColor="{DynamicResource PrimaryBackground}">
+
     <VerticalStackLayout VerticalOptions="Center" Spacing="10">
         <Grid ColumnDefinitions="400, 400" RowDefinitions="500, 50" ColumnSpacing="15" RowSpacing="10" HorizontalOptions="Center" VerticalOptions="Center">
             <Frame Grid.Column="0" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="102, 40, 102, 0">
@@ -16,19 +20,38 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Frame Grid.Column="1" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill">
-                <VerticalStackLayout>
-                    <Label Text="Goodbye" Style="{DynamicResource SmallLabel}"/>
+            <Frame Grid.Column="1" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="15, 50, 15, 50">
+                <VerticalStackLayout Spacing="5">
+
+                    <Label Style="{DynamicResource MediumLabel}" Text="People" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+                    <ListView ItemsSource="{Binding PersonCollection}" 
+                              SelectionMode="Single" 
+                              VerticalScrollBarVisibility="Always" 
+                              ItemSelected="PersonSelected"
+                              RowHeight="80"
+                              x:Name="PersonSelectionList">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Person">
+                                <ViewCell>
+                                    <VerticalStackLayout VerticalOptions="Fill">
+                                        <Label Style="{DynamicResource SmallLabel}" Text="{Binding name, StringFormat='• {0}'}"/>
+                                        <Label Style="{DynamicResource SmallLabel}" Text="{Binding personalId, StringFormat='  ID: {0}'}"/>
+                                    </VerticalStackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </VerticalStackLayout>
             </Frame>
 
             <HorizontalStackLayout Grid.Column="0" Grid.Row="1" HorizontalOptions="Center" Spacing="5">
-                <Button Text="Save" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100" Clicked="OnSaveBtnClicked"/>
-                <Button Text="Reset" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100"/>
+                <Button Text="Save" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100" Command="{Binding SavePersonCommand}"/>
+                <Button Text="Reset" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100" Command="{Binding ResetFieldsCommand}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Grid.Column="1" Grid.Row="1" HorizontalOptions="Center">
-                <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" WidthRequest="210" Clicked="OnSearchBtnClicked"/>
+                <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" WidthRequest="210" Command="{Binding GetPeopleCommand}"/>
             </HorizontalStackLayout>
 
         </Grid>
