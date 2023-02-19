@@ -1,33 +1,43 @@
-using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.Input;
 using FamilyTree.Logic;
 using FamilyTree.Models;
-using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace FamilyTree.MVVM;
 
 public partial class PeopleEditorPage : ContentPage
 {
-    public ObservableCollection<Person> PersonCollection { get; set; } = new ();
+    public ObservableCollection<Person> PersonCollection { get; set; } = new();
+    public ObservableCollection<Person> SpouseSelectionCollection { get; set; } = new();
+    public ObservableCollection<Person> ChildrenSelectionCollection { get; set; } = new();
     public IAsyncRelayCommand GetPeopleCommand { get; }
     public IAsyncRelayCommand SavePersonCommand { get; }
     public IAsyncRelayCommand ResetFieldsCommand { get; }
+    public IAsyncRelayCommand SearchForSpousesCommand { get; }
+    public Person SelectedPerson { get; set; }
 
     public PeopleEditorPage()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         GetPeopleCommand = new AsyncRelayCommand(GetPeopleAsync);
         SavePersonCommand = new AsyncRelayCommand(SavePersonAsync);
         ResetFieldsCommand = new AsyncRelayCommand(ResetFieldsAsync);
+        SearchForSpousesCommand = new AsyncRelayCommand(SearchForSpousesBtnClicked);
 
 
         BindingContext = this;
-	}
+    }
+
+    // BUTTONS
 
     public async Task GetPeopleAsync()
     {
+        if (FamilyTreeManager.people.Count == 0) return;
         await FamilyTreeManager.UpdatePeopleList();
         PersonCollection.Clear();
+
         foreach (var person in FamilyTreeManager.people.Values)
         {
             PersonCollection.Add(person);
@@ -36,10 +46,7 @@ public partial class PeopleEditorPage : ContentPage
 
     public async Task SavePersonAsync()
     {
-        if (FieldsAreValid() == false)
-        {
-            return;
-        }
+        if (FieldsAreValid() == false) return;
 
         if (FamilyTreeManager.DoesPersonExist(PersonIdEntry.Text))
         {
@@ -50,9 +57,7 @@ public partial class PeopleEditorPage : ContentPage
         Person newPerson = new Person
         {
             personalId = long.Parse(PersonIdEntry.Text),
-            name = PersonNameEntry.Text,
-            spouseId = long.Parse(SpouseIdEntry.Text),
-            childrenIds = new long[]{}
+            name = PersonNameEntry.Text
         };
 
         await FamilyTreeManager.AddPerson(newPerson);
@@ -66,41 +71,77 @@ public partial class PeopleEditorPage : ContentPage
         {
             PersonIdEntry.Text = String.Empty;
             PersonNameEntry.Text = String.Empty;
-            SpouseIdEntry.Text = String.Empty;
-            ChildIdEntry.Text = String.Empty;
             PersonSelectionList.SelectedItem = null;
+            SpouseSelectionCollection.Clear();
+            ChildrenSelectionCollection.Clear();
+        }
+    }
 
+    private async Task SearchForSpousesBtnClicked()
+    {
+        if (SelectedPerson == null) return;
+
+        await FamilyTreeManager.UpdatePeopleList();
+        SpouseSelectionCollection.Clear();
+
+        Dictionary<long, Person> possibleSpouses = FamilyTreeManager.people;
+
+        possibleSpouses.Remove(SelectedPerson.personalId);
+
+        if (SelectedPerson.childrenIds.Length > 0)
+        {
+            foreach (var c in SelectedPerson.childrenIds)
+            {
+                possibleSpouses.Remove(c);
+            }
+        }
+
+        List<Person> parents = FamilyTreeManager.GetParents(SelectedPerson);
+        if (parents.Count > 0)
+        {
+            foreach (var p in parents)
+            {
+                possibleSpouses.Remove(p.personalId);
+            }
+        }
+
+        List<Person> siblings = FamilyTreeManager.GetSiblings(SelectedPerson, parents);
+        if (siblings.Count > 0)
+        {
+            foreach (var s in siblings)
+            {
+                possibleSpouses.Remove(s.personalId);
+            }
+        }
+        //Debug.WriteLine("Removed person's siblings from possible spouses");
+
+        try
+        {
+            foreach (var s in possibleSpouses)
+            {
+                SpouseSelectionCollection.Add(s.Value);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine("Couldn't add spouses to list: " + e);
+            throw;
+        }
+
+        if (SelectedPerson.spouseId != 0)
+        {
+            foreach (var s in SpouseSelectionCollection)
+            {
+                if (s.personalId == SelectedPerson.spouseId)
+                {
+                    break;
+                }
+            }
         }
     }
 
     public bool FieldsAreValid()
     {
-        // Person's ID
-        if (string.IsNullOrEmpty(PersonIdEntry.Text))
-        {
-            DisplayAlert("Error", "Personal ID can't be empty!)", "OK");
-            return false;
-        }
-
-        if (long.TryParse(PersonIdEntry.Text, out long idP) == false || PersonIdEntry.Text.Length != 11)
-        {
-            DisplayAlert("Error", "Please enter a valid 11 digit personal id!", "OK");
-            return false;
-        }
-
-        // Spouse's ID
-        if (string.IsNullOrEmpty(SpouseIdEntry.Text))
-        {
-            DisplayAlert("Error", "Please enter a valid last name!", "OK");
-            return false;
-        }
-
-        if (long.TryParse(SpouseIdEntry.Text, out long idS) == false || SpouseIdEntry.Text.Length != 11)
-        {
-            DisplayAlert("Error", "Please enter a valid 11 digit spouse id or leave it blank!", "OK");
-            return false;
-        }
-
         // Person's name
         if (string.IsNullOrEmpty(PersonNameEntry.Text))
         {
@@ -117,40 +158,50 @@ public partial class PeopleEditorPage : ContentPage
             }
         }
 
+        // Person's ID
+        if (string.IsNullOrEmpty(PersonIdEntry.Text))
+        {
+            DisplayAlert("Error", "Personal ID can't be empty!)", "OK");
+            return false;
+        }
+
+        if (long.TryParse(PersonIdEntry.Text, out long idP) == false || PersonIdEntry.Text.Length != 11)
+        {
+            DisplayAlert("Error", "Please enter a valid 11 digit personal id!", "OK");
+            return false;
+        }
+
         return true;
     }
 
     private void PersonSelected(object sender, SelectedItemChangedEventArgs e)
     {
+        SpouseSelectionCollection.Clear();
+        ChildrenSelectionCollection.Clear();
+
         if (e.SelectedItem is Person person)
         {
+            SelectedPerson = person;
+
             PersonIdEntry.Text = person.personalId.ToString();
             PersonNameEntry.Text = person.name;
 
             if (person.spouseId != 0)
             {
-                SpouseIdEntry.Text = person.spouseId.ToString();
+
             }
             else
             {
-                SpouseIdEntry.Text = String.Empty;
+
             }
 
             if (person.childrenIds.Length > 0)
             {
-                string text = String.Empty;
-                foreach (var child in person.childrenIds)
-                {
-                    text += child.ToString() + ", ";
-                }
 
-                text = text.Remove(text.Length - 2);
-
-                ChildIdEntry.Text = text;
             }
             else
             {
-                ChildIdEntry.Text = String.Empty;
+
             }
         }
     }

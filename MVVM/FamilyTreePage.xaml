@@ -13,27 +13,25 @@
 
             <!--*** 1st column ***-->
 
-            <Frame Grid.Column="0" Grid.RowSpan="4" Style="{DynamicResource  BaseFrameStyle}" HorizontalOptions="Fill" Padding="10">
-                <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" HorizontalOptions="Fill" FontAttributes="Bold" Clicked="GetPeopleToListAsync" VerticalOptions="Start" HeightRequest="50"/>
-            </Frame>
-
-            <ListView Grid.Column="0" Grid.Row="1"
-                      ItemsSource="{Binding People}"
-                      SelectionMode="Single"
-                      VerticalScrollBarVisibility="Always"
-                      ItemSelected="PersonSelectedFromList"
-                      RowHeight="80">
-                 <ListView.ItemTemplate>
-                     <DataTemplate x:DataType="models:Person">
-                         <ViewCell>
-                             <VerticalStackLayout VerticalOptions="Fill">
-                                 <Label Style="{DynamicResource SmallLabel}" Text="{Binding name, StringFormat='• {0}'}"/>
-                                 <Label Style="{DynamicResource SmallLabel}" Text="{Binding personalId, StringFormat='  ID: {0}'}"/>
-                            </VerticalStackLayout>
-                         </ViewCell>
-                     </DataTemplate>
-                 </ListView.ItemTemplate>
-             </ListView>
+            <VerticalStackLayout Grid.Column="0" Grid.Row="1">
+                <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" HorizontalOptions="Fill" FontAttributes="Bold" Margin="0, 0, 0, 20" Clicked="GetPeopleToListAsync" VerticalOptions="Start" HeightRequest="50"/>
+                <ListView ItemsSource="{Binding People}"
+                          SelectionMode="Single"
+                          VerticalScrollBarVisibility="Default"
+                          ItemSelected="PersonSelectedFromList"
+                          RowHeight="80">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Person">
+                            <ViewCell>
+                                <VerticalStackLayout VerticalOptions="Fill">
+                                    <Label Style="{DynamicResource SmallLabel}" Text="{Binding name, StringFormat='• {0}'}"/>
+                                    <Label Style="{DynamicResource SmallLabel}" Text="{Binding personalId, StringFormat='  ID: {0}'}"/>
+                                </VerticalStackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </VerticalStackLayout>
 
             <!--*** 2nd column ***-->
 
@@ -48,14 +46,16 @@
 
             <!-- 1st row -->
             <HorizontalStackLayout Grid.Column="2" Grid.Row="0" HorizontalOptions="Center" Spacing="100" TranslationX="-25">
-                <Border Style="{DynamicResource BaseBorderStyle}" HorizontalOptions="Fill">
-                    <VerticalStackLayout HorizontalOptions="Fill" WidthRequest="200" >
-                        <Label Text="Parent 1" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                <Border Style="{DynamicResource BaseBorderStyle}" HorizontalOptions="Fill" WidthRequest="200" Padding="5">
+                    <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                        <Label x:Name="Parent1Name" Text="parent1_name" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                        <Label x:Name="Parent1Id" Text="parent1_id" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
-                <Border Style="{DynamicResource BaseBorderStyle}" HorizontalOptions="Fill">
-                    <VerticalStackLayout HorizontalOptions="Fill" WidthRequest="200">
-                        <Label Text="Parent 1" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                <Border Style="{DynamicResource BaseBorderStyle}" HorizontalOptions="Fill" WidthRequest="200" Padding="5">
+                    <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                        <Label x:Name="Parent2Name" Text="parent2_name" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                        <Label x:Name="Parent2Id" Text="parent2_id" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
             </HorizontalStackLayout>
@@ -63,14 +63,16 @@
             <!-- 2nd row -->
 
             <HorizontalStackLayout Grid.Column="2" Grid.Row="1" HorizontalOptions="Center" Spacing="150" TranslationX="-30">
-                <Border Style="{DynamicResource BaseBorderStyle}" HeightRequest="250" WidthRequest="200">
-                    <VerticalStackLayout>
-                        <Label Text="Spouse" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                <Border Style="{DynamicResource BaseBorderStyle}" HeightRequest="250" WidthRequest="200" Padding="5">
+                    <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                        <Label x:Name="SpouseName" Text="spouse_name" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                        <Label x:Name="SpouseId" Text="spouse_id" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
-                <Border Style="{DynamicResource BaseBorderStyle}">
-                    <VerticalStackLayout WidthRequest="300">
-                        <Label Text="Person" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                <Border Style="{DynamicResource BaseBorderStyle}" WidthRequest="300" Padding="5">
+                    <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                        <Label x:Name="PersonName" Text="person_name" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                        <Label x:Name="PersonId" Text="person_id" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
                 <Border Style="{DynamicResource BaseBorderStyle}" WidthRequest="200" HeightRequest="250">
@@ -80,7 +82,12 @@
                                   SelectionMode="None">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:Person">
-
+                                    <ViewCell>
+                                        <VerticalStackLayout VerticalOptions="Fill">
+                                            <Label Style="{DynamicResource SmallLabel}" Text="{Binding name, StringFormat='• {0}'}"/>
+                                            <Label Style="{DynamicResource SmallLabel}" Text="{Binding personalId, StringFormat='  ID: {0}'}"/>
+                                        </VerticalStackLayout>
+                                    </ViewCell>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -89,17 +96,35 @@
             </HorizontalStackLayout>
 
             <!-- 3rd row -->
-            <CollectionView ItemsSource="{Binding PersonsChildren}" SelectionMode="Single">
+            <CollectionView Grid.Column="2"  Grid.Row="2" ItemsSource="{Binding PersonsChildren}" SelectionMode="Single" VerticalOptions="Fill">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Horizontal" />
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Person">
-                        <Frame Padding="10, 0, 10, 0" WidthRequest="200" HeightRequest="250">
+                        <Border Padding="10" WidthRequest="200" Style="{DynamicResource BaseBorderStyle}">
                             <VerticalStackLayout>
-                                <Label Text="{Binding name}" Style="{DynamicResource SmallLabel}"/>
+                                <Label Text="{Binding name}" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                                <Label Text="{Binding personalId}" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- 4th row -->
+            <CollectionView Grid.Column="2"  Grid.Row="3" ItemsSource="{Binding PersonsGrandChildren}" SelectionMode="Single" VerticalOptions="Fill">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Person">
+                        <Border Padding="10" WidthRequest="200" Style="{DynamicResource BaseBorderStyle}">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding name}" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                                <Label Text="{Binding personalId}" Style="{DynamicResource SmallLabel}" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

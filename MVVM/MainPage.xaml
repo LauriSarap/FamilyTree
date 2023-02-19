@@ -2,9 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FamilyTree.MVVM.MainPage"
-             BackgroundColor="{DynamicResource PrimaryBackground}">
+             BackgroundColor="{DynamicResource PrimaryBackground}"
+             xmlns:mvvm="using:FamilyTree.MVVM"
+             x:DataType="mvvm:MainPage">
 
-    <VerticalStackLayout VerticalOptions="Center">
+    <VerticalStackLayout VerticalOptions="Center" Spacing="20">
+
+        <Button Text="Import people from a txt file"
+                Command="{Binding ImportFileCommand}"
+                HorizontalOptions="Center"
+                Style="{DynamicResource BaseButtonStyle}"/>
 
         <Button Text="Start"
                 Clicked="ToAddPeoplePageBtnClicked"

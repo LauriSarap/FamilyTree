@@ -8,52 +8,80 @@
              Title="PeopleEditorPage"
              BackgroundColor="{DynamicResource PrimaryBackground}">
 
-    <VerticalStackLayout VerticalOptions="Center" Spacing="10">
-        <Grid ColumnDefinitions="400, 400" RowDefinitions="500, 50" ColumnSpacing="15" RowSpacing="10" HorizontalOptions="Center" VerticalOptions="Center">
-            <Frame Grid.Column="0" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="102, 40, 102, 0">
-                <VerticalStackLayout Spacing="5">
-                    <BoxView Style="{DynamicResource BaseBoxStyle}" HeightRequest="192" WidthRequest="192" HorizontalOptions="Center" Margin="0, 0, 0, 10"/>
-                    <Entry x:Name="PersonNameEntry" Placeholder="Person's Name" Style="{DynamicResource BaseEntryStyle}" HorizontalOptions="Fill"/>
-                    <Entry x:Name="PersonIdEntry" Placeholder="Person's ID" Style="{DynamicResource BaseEntryStyle}" HorizontalOptions="Fill"/>
-                    <Entry x:Name="SpouseIdEntry" Placeholder="Spouse's ID" Style="{DynamicResource BaseEntryStyle}" HorizontalOptions="Fill"/>
-                    <Editor x:Name="ChildIdEntry" Placeholder="Child1Id, ..." Style="{DynamicResource BaseEditorStyle}" HorizontalOptions="Fill" VerticalOptions="Fill" HeightRequest="100"/>
+    <HorizontalStackLayout VerticalOptions="Fill" Spacing="10" HorizontalOptions="Fill" Padding="10">
+        <Frame Style="{DynamicResource BaseFrameStyle}" VerticalOptions="Fill" HorizontalOptions="Start" WidthRequest="300">
+            <VerticalStackLayout Spacing="10" VerticalOptions="Fill">
+                <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" Command="{Binding GetPeopleCommand}" HorizontalOptions="Fill"/>
+                <VerticalStackLayout Padding="10" VerticalOptions="Fill">
+                    <Label Style="{DynamicResource MediumLabel}" Text="People" FontSize="24" FontAttributes="Bold" HorizontalOptions="Start" Margin="0, 10, 0, 0"/>
+
+                    <ScrollView VerticalOptions="Fill" HorizontalOptions="Fill" VerticalScrollBarVisibility="Always">
+                        <ListView ItemsSource="{Binding PersonCollection}" 
+                                  SelectionMode="Single" 
+                                  ItemSelected="PersonSelected"
+                                  RowHeight="80"
+                                  x:Name="PersonSelectionList"
+                                  VerticalOptions="Fill">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Person">
+                                    <ViewCell>
+                                        <VerticalStackLayout>
+                                            <Label Style="{DynamicResource SmallLabel}" Text="{Binding name, StringFormat='• {0}'}"/>
+                                            <Label Style="{DynamicResource SmallLabel}" Text="{Binding personalId, StringFormat='  ID: {0}'}"/>
+                                        </VerticalStackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollView>
                 </VerticalStackLayout>
-            </Frame>
+            </VerticalStackLayout>
+        </Frame>
 
-            <Frame Grid.Column="1" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="15, 50, 15, 50">
-                <VerticalStackLayout Spacing="5">
+        <VerticalStackLayout VerticalOptions="Center" Spacing="5">
+            <Grid ColumnDefinitions="400, 300, 300" RowDefinitions="500, 50" ColumnSpacing="15" RowSpacing="10" HorizontalOptions="Center" VerticalOptions="Center">
 
-                    <Label Style="{DynamicResource MediumLabel}" Text="People" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Frame Grid.Column="0" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="102, 40, 102, 0">
+                    <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                        <BoxView Style="{DynamicResource BaseBoxStyle}" HeightRequest="192" WidthRequest="192" HorizontalOptions="Center" Margin="0, 0, 0, 10"/>
+                        <Entry x:Name="PersonNameEntry" Placeholder="Person's Name" Style="{DynamicResource BaseEntryStyle}" HorizontalOptions="Fill"/>
+                        <Entry x:Name="PersonIdEntry" Placeholder="Person's ID" Style="{DynamicResource BaseEntryStyle}" HorizontalOptions="Fill"/>
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="5" Margin="0, 100, 0, 0">
+                            <Button Text="Save" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100" Command="{Binding SavePersonCommand}"/>
+                            <Button Text="Reset" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100" Command="{Binding ResetFieldsCommand}"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
 
-                    <ListView ItemsSource="{Binding PersonCollection}" 
-                              SelectionMode="Single" 
-                              VerticalScrollBarVisibility="Always" 
-                              ItemSelected="PersonSelected"
-                              RowHeight="80"
-                              x:Name="PersonSelectionList">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="models:Person">
-                                <ViewCell>
-                                    <VerticalStackLayout VerticalOptions="Fill">
-                                        <Label Style="{DynamicResource SmallLabel}" Text="{Binding name, StringFormat='• {0}'}"/>
-                                        <Label Style="{DynamicResource SmallLabel}" Text="{Binding personalId, StringFormat='  ID: {0}'}"/>
+                <Frame Grid.Column="1" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="15, 50, 15, 50">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Style="{DynamicResource MediumLabel}" Text="Add Spouse" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Button Style="{DynamicResource BaseButtonStyle}" Text="Search for spouses" FontAttributes="Bold" HorizontalOptions="Fill" Command="{Binding SearchForSpousesCommand}"/>
+                        <CollectionView ItemsSource="{Binding SpouseSelectionCollection}"
+                                        SelectionMode="Single"
+                                        HorizontalOptions="Fill">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Person">
+                                    <VerticalStackLayout HorizontalOptions="Fill">
+                                        <Frame Style="{DynamicResource BaseFrameStyle}" Padding="5" HorizontalOptions="Fill">
+                                            <VerticalStackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
+                                                <Label Text="{Binding name}" Style="{DynamicResource SmallLabel}"/>
+                                                <Label Text="{Binding personalId}" Style="{DynamicResource SmallLabel}"/>
+                                            </VerticalStackLayout>
+                                        </Frame>
                                     </VerticalStackLayout>
-                                </ViewCell>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </VerticalStackLayout>
-            </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
 
-            <HorizontalStackLayout Grid.Column="0" Grid.Row="1" HorizontalOptions="Center" Spacing="5">
-                <Button Text="Save" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100" Command="{Binding SavePersonCommand}"/>
-                <Button Text="Reset" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" HorizontalOptions="Center" WidthRequest="100" Command="{Binding ResetFieldsCommand}"/>
-            </HorizontalStackLayout>
-
-            <HorizontalStackLayout Grid.Column="1" Grid.Row="1" HorizontalOptions="Center">
-                <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" FontAttributes="Bold" WidthRequest="210" Command="{Binding GetPeopleCommand}"/>
-            </HorizontalStackLayout>
-
-        </Grid>
-    </VerticalStackLayout>
+                <Frame x:Name="AddChildrenFrame" Grid.Column="2" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="15, 50, 15, 50">
+                    <VerticalStackLayout Spacing="5">
+                        <Label Style="{DynamicResource MediumLabel}" Text="Add Children" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+            </Grid>
+        </VerticalStackLayout>
+    </HorizontalStackLayout>
 </ContentPage>
