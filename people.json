@@ -1,0 +1,106 @@
+{
+  "50410242752": {
+    "name": "LauriS",
+    "personalId": 50410242752,
+    "spouseId": 60612282730,
+    "parentIds": [
+      36912062745,
+      47201042756
+    ],
+    "childrenIds": [
+      51011122741
+    ]
+  },
+  "60708202732": {
+    "name": "KatarinaS",
+    "personalId": 60708202732,
+    "spouseId": 0,
+    "parentIds": [
+      36912062745,
+      47201042756
+    ],
+    "childrenIds": []
+  },
+  "36912062745": {
+    "name": "AivarS",
+    "personalId": 36912062745,
+    "spouseId": 47201042756,
+    "parentIds": [],
+    "childrenIds": [
+      50410242752,
+      60708202732
+    ]
+  },
+  "47201042756": {
+    "name": "MarikaS",
+    "personalId": 47201042756,
+    "spouseId": 36912062745,
+    "parentIds": [],
+    "childrenIds": [
+      50410242752,
+      60708202732,
+      49408252718
+    ]
+  },
+  "60612282730": {
+    "name": "EmmaM",
+    "personalId": 60612282730,
+    "spouseId": 50410242752,
+    "parentIds": [
+      37206122723,
+      47408032723
+    ],
+    "childrenIds": [
+      51011122741
+    ]
+  },
+  "37206122723": {
+    "name": "RasmusM",
+    "personalId": 37206122723,
+    "spouseId": 47408032723,
+    "parentIds": [],
+    "childrenIds": [
+      60612282730,
+      60509062730
+    ]
+  },
+  "47408032723": {
+    "name": "KristinaM",
+    "personalId": 47408032723,
+    "spouseId": 37206122723,
+    "parentIds": [],
+    "childrenIds": [
+      60612282730,
+      60509062730
+    ]
+  },
+  "51011122741": {
+    "name": "JoonasS",
+    "personalId": 51011122741,
+    "spouseId": 0,
+    "parentIds": [
+      50410242752,
+      60612282730
+    ],
+    "childrenIds": []
+  },
+  "60509062730": {
+    "name": "MatildaM",
+    "personalId": 60509062730,
+    "spouseId": 0,
+    "parentIds": [
+      37206122723,
+      47408032723
+    ],
+    "childrenIds": []
+  },
+  "49408252718": {
+    "name": "KarolinaK",
+    "personalId": 49408252718,
+    "spouseId": 0,
+    "parentIds": [
+      47201042756
+    ],
+    "childrenIds": []
+  }
+}

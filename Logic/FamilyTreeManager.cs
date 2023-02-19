@@ -1,5 +1,6 @@
 ﻿using FamilyTree.Data;
 using FamilyTree.Models;
+using System;
 using System.Diagnostics;
 
 namespace FamilyTree.Logic
@@ -259,6 +260,23 @@ namespace FamilyTree.Logic
             missingChild.name = "Unknown";
             await PersonDatabase.AddPerson(missingChild);
             return missingChild;
+        }
+
+        public static async Task<List<Person>> GetAncestors(Person personWithAncestors)
+        {
+            List<Person> ancestors = new List<Person>();
+
+            foreach (var parentId in personWithAncestors.parentIds)
+            {
+                if (people.ContainsKey(parentId))
+                {
+                    Person parent = people[parentId];
+                    ancestors.Add(parent);
+                    ancestors.AddRange(await GetAncestors(parent));
+                }
+            }
+
+            return ancestors;
         }
     }
 }

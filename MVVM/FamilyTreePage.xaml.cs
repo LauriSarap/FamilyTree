@@ -111,9 +111,10 @@ public partial class FamilyTreePage : ContentPage
 
     public async void GetPeopleToListAsync(object sender, EventArgs e)
     {
-        if (FamilyTreeManager.people.Count == 0) return;
         await FamilyTreeManager.UpdatePeopleList();
         People.Clear();
+
+        if (FamilyTreeManager.people.Count == 0) return;
         foreach (var person in FamilyTreeManager.people.Values)
         {
             People.Add(person);

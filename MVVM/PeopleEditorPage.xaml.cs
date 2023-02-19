@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 using FamilyTree.Logic;
 using FamilyTree.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -34,10 +35,10 @@ public partial class PeopleEditorPage : ContentPage
 
     public async Task GetPeopleAsync()
     {
-        if (FamilyTreeManager.people.Count == 0) return;
         await FamilyTreeManager.UpdatePeopleList();
         PersonCollection.Clear();
 
+        if (FamilyTreeManager.people.Count == 0) return;
         foreach (var person in FamilyTreeManager.people.Values)
         {
             PersonCollection.Add(person);
@@ -96,15 +97,25 @@ public partial class PeopleEditorPage : ContentPage
             }
         }
 
-        List<Person> parents = FamilyTreeManager.GetParents(SelectedPerson);
+        /*List<Person> parents = FamilyTreeManager.GetParents(SelectedPerson);
         if (parents.Count > 0)
         {
             foreach (var p in parents)
             {
                 possibleSpouses.Remove(p.personalId);
             }
+        }*/
+
+        List<Person> ancestors = await FamilyTreeManager.GetAncestors(SelectedPerson);
+        if (ancestors.Count > 0)
+        {
+            foreach (var a in ancestors)
+            {
+                possibleSpouses.Remove(a.personalId);
+            }
         }
 
+        List<Person> parents = FamilyTreeManager.GetParents(SelectedPerson);
         List<Person> siblings = FamilyTreeManager.GetSiblings(SelectedPerson, parents);
         if (siblings.Count > 0)
         {
@@ -113,7 +124,6 @@ public partial class PeopleEditorPage : ContentPage
                 possibleSpouses.Remove(s.personalId);
             }
         }
-        //Debug.WriteLine("Removed person's siblings from possible spouses");
 
         try
         {
@@ -174,28 +184,25 @@ public partial class PeopleEditorPage : ContentPage
         return true;
     }
 
-    private void PersonSelected(object sender, SelectedItemChangedEventArgs e)
+    private void PersonSelectBtnClicked(object sender, EventArgs e)
     {
-        SpouseSelectionCollection.Clear();
-        ChildrenSelectionCollection.Clear();
-
-        if (e.SelectedItem is Person person)
+        var selectedPerson = (sender as Button).BindingContext as Person;
+        if (selectedPerson != null)
         {
-            SelectedPerson = person;
+            SelectedPerson = selectedPerson;
 
-            PersonIdEntry.Text = person.personalId.ToString();
-            PersonNameEntry.Text = person.name;
+            PersonIdEntry.Text = selectedPerson.personalId.ToString();
+            PersonNameEntry.Text = selectedPerson.name;
 
-            if (person.spouseId != 0)
+            if (selectedPerson.spouseId != 0)
             {
 
             }
             else
             {
-
             }
 
-            if (person.childrenIds.Length > 0)
+            if (selectedPerson.childrenIds.Length > 0)
             {
 
             }
@@ -204,5 +211,11 @@ public partial class PeopleEditorPage : ContentPage
 
             }
         }
+    }
+
+    private void SpouseSelectionBtnCliced(object sender, EventArgs e)
+    {
+        var selectedSpouse = (sender as Button).BindingContext as Person;
+        DisplayAlert("Success!", $"Selected {selectedSpouse.name} as Spouse", "Okay");
     }
 }
