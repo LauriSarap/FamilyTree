@@ -8,6 +8,8 @@ This application was built for the ASI Karikas 2023 competition. One of the goal
 * Open the solution in Visual Studio.
   * Make sure you have .NET Maui installed
   * Application uses .NET 6.0
+* Open Visual Studio and the .sln from the repository
+* !Wait a bit before starting as VS needs to download Nuget packages!
 * Build the solution and run the app
 
 # Features
