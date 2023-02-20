@@ -157,5 +157,16 @@ namespace FamilyTree.Data
             string updatedJson = JsonConvert.SerializeObject(people, Formatting.Indented);
             await File.WriteAllTextAsync(filePath, updatedJson);
         }
+
+        public static async Task ClearDatabase()
+        {
+            string json = await File.ReadAllTextAsync(filePath);
+            Dictionary<long, Person> people = JsonConvert.DeserializeObject<Dictionary<long, Person>>(json);
+
+            people.Clear();
+
+            string updatedJson = JsonConvert.SerializeObject(people, Formatting.Indented);
+            await File.WriteAllTextAsync(filePath, updatedJson);
+        }
     }
 }

@@ -17,6 +17,12 @@
                     HorizontalOptions="Center"
                     FontSize="24"
                     Style="{DynamicResource BaseButtonStyle}"/>
+            <Button Text="Clear database"
+                    x:Name="ClearDatabaseBtn"
+                    Command="{Binding ClearDatabaseCommand}"
+                    HorizontalOptions="Center"
+                    FontSize="24"
+                    Style="{DynamicResource BaseButtonStyle}"/>
 
             <Button Text="Start"
                     Clicked="ToAddPeoplePageBtnClicked"

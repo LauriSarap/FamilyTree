@@ -9,12 +9,14 @@ namespace FamilyTree.MVVM;
 public partial class MainPage : ContentPage
 {
     public IAsyncRelayCommand ImportFileCommand { get; }
+    public IAsyncRelayCommand ClearDatabaseCommand { get; }
 
     public MainPage()
     {
         InitializeComponent();
 
         ImportFileCommand = new AsyncRelayCommand(ImportPeopleFileBtnClicked);
+        ClearDatabaseCommand = new AsyncRelayCommand(ClearDatabaseBtnClicked);
 
         BindingContext = this;
     }
@@ -61,6 +63,14 @@ public partial class MainPage : ContentPage
         ImportPeopleBtn.Text = $"Imported from {chosenFile.FileName}!";
 
         await DisplayAlert("Success!", "People were successfully imported!", "Okay");
+    }
+
+    private async Task ClearDatabaseBtnClicked()
+    {
+        await PersonDatabase.ClearDatabase();
+        await FamilyTreeManager.UpdatePeopleList();
+        FamilyTreeManager.PeopleUpdatedEventCalled();
+        await DisplayAlert("Success!", "Database was successfully cleared!", "Okay");
     }
 }
 
