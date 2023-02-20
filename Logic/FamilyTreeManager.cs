@@ -77,10 +77,7 @@ namespace FamilyTree.Logic
 
         public static async Task UpdatePeopleList()
         {
-            if (people.Count > 0)
-            {
-                people.Clear();
-            }
+            people.Clear();
             people = await PersonDatabase.LoadAllPersons();
         }
 
@@ -107,13 +104,13 @@ namespace FamilyTree.Logic
             await UpdatePeopleList();
         }
 
-        public static async Task AddSpouse(long spouseId, long personalId)
+        public static async Task AddSpouse(long personalId, long spouseId)
         {
             if (spouseId != 0)
             {
                 if (people[spouseId] != null)
                 {
-                    await PersonDatabase.AddSpouseToPerson(spouseId, personalId);
+                    await PersonDatabase.AddSpouseToPerson(personalId, spouseId);
                 }
             }
         }
@@ -158,14 +155,18 @@ namespace FamilyTree.Logic
         public static List<Person> GetParents(Person personWithParents)
         {
             List<Person> parents = new();
+            ;
 
             if (personWithParents.parentIds.Length > 0)
             {
+                Debug.WriteLine("Found some parents");
+                Debug.WriteLine("Getting them from people: " + people.Count);
                 foreach (var parentId in personWithParents.parentIds)
                 {
                     Person parent = people[parentId];
                     parents.Add(parent);
                 }
+                Debug.WriteLine("Found all parents: " + parents.Count);
             }
 
             return parents;
@@ -277,6 +278,23 @@ namespace FamilyTree.Logic
             }
 
             return ancestors;
+        }
+
+        public static async Task<List<Person>> GetDescendants(Person personWithDescendants)
+        {
+            List<Person> descendants = new List<Person>();
+
+            foreach (var childId in personWithDescendants.childrenIds)
+            {
+                if (people.ContainsKey(childId))
+                {
+                    Person descendant = people[childId];
+                    descendants.Add(descendant);
+                    descendants.AddRange(await GetDescendants(descendant));
+                }
+            }
+
+            return descendants;
         }
     }
 }

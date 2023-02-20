@@ -71,6 +71,17 @@ namespace FamilyTree.Data
             await File.WriteAllTextAsync(filePath, updatedJson);
         }
 
+        public static async Task RemoveSpouse(long person)
+        {
+            string json = await File.ReadAllTextAsync(filePath);
+            Dictionary<long, Person> people = JsonConvert.DeserializeObject<Dictionary<long, Person>>(json);
+
+            people[person].spouseId = 0;
+
+            string updatedJson = JsonConvert.SerializeObject(people, Formatting.Indented);
+            await File.WriteAllTextAsync(filePath, updatedJson);
+        }
+
         public static async Task AddParentsToPerson(long personId, long parent1 = 0, long parent2 = 0)
         {
             string json = await File.ReadAllTextAsync(filePath);

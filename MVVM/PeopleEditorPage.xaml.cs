@@ -4,6 +4,7 @@ using FamilyTree.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using FamilyTree.Data;
 
 namespace FamilyTree.MVVM;
 
@@ -85,26 +86,36 @@ public partial class PeopleEditorPage : ContentPage
         await FamilyTreeManager.UpdatePeopleList();
         SpouseSelectionCollection.Clear();
 
-        Dictionary<long, Person> possibleSpouses = FamilyTreeManager.people;
+        Dictionary<long, Person> possibleSpouses = new();
+
+        foreach (var person in FamilyTreeManager.people.Values)
+        {
+            possibleSpouses.Add(person.personalId, person);
+        }
 
         possibleSpouses.Remove(SelectedPerson.personalId);
 
-        if (SelectedPerson.childrenIds.Length > 0)
+
+        /*if (SelectedPerson.childrenIds.Length > 0)
         {
             foreach (var c in SelectedPerson.childrenIds)
             {
                 possibleSpouses.Remove(c);
             }
+        }*/
+
+        List<Person> descendants = await FamilyTreeManager.GetDescendants(SelectedPerson);
+        if (descendants.Count > 0)
+        {
+            foreach (var d in descendants)
+            {
+                if (possibleSpouses.ContainsKey(d.personalId))
+                {
+                    possibleSpouses.Remove(d.personalId);
+                }
+            }
         }
 
-        /*List<Person> parents = FamilyTreeManager.GetParents(SelectedPerson);
-        if (parents.Count > 0)
-        {
-            foreach (var p in parents)
-            {
-                possibleSpouses.Remove(p.personalId);
-            }
-        }*/
 
         List<Person> ancestors = await FamilyTreeManager.GetAncestors(SelectedPerson);
         if (ancestors.Count > 0)
@@ -115,13 +126,27 @@ public partial class PeopleEditorPage : ContentPage
             }
         }
 
+
         List<Person> parents = FamilyTreeManager.GetParents(SelectedPerson);
         List<Person> siblings = FamilyTreeManager.GetSiblings(SelectedPerson, parents);
         if (siblings.Count > 0)
         {
             foreach (var s in siblings)
             {
-                possibleSpouses.Remove(s.personalId);
+                if (possibleSpouses.ContainsKey(s.personalId))
+                {
+                    possibleSpouses.Remove(s.personalId);
+                }
+            }
+        }
+
+
+
+        if (SelectedPerson.spouseId != 0)
+        {
+            if (possibleSpouses.ContainsKey(SelectedPerson.spouseId))
+            {
+                possibleSpouses.Remove(SelectedPerson.spouseId);
             }
         }
 
@@ -213,9 +238,25 @@ public partial class PeopleEditorPage : ContentPage
         }
     }
 
-    private void SpouseSelectionBtnCliced(object sender, EventArgs e)
+    private async void SpouseSelectionBtnCliced(object sender, EventArgs e)
     {
         var selectedSpouse = (sender as Button).BindingContext as Person;
-        DisplayAlert("Success!", $"Selected {selectedSpouse.name} as Spouse", "Okay");
+
+        // Remove person from old spouse
+        if (SelectedPerson.spouseId != 0)
+        {
+            await PersonDatabase.RemoveSpouse(SelectedPerson.spouseId);
+        }
+
+        // Update person's spouse
+        SelectedPerson.spouseId = selectedSpouse.personalId;
+
+        // Update spouse's spouse
+        await FamilyTreeManager.AddSpouse(selectedSpouse.personalId, SelectedPerson.personalId);
+
+        SpouseSelectionCollection.Clear();
+
+        await DisplayAlert("Success!", $"Selected {selectedSpouse.name} as Spouse", "Okay");
+
     }
 }

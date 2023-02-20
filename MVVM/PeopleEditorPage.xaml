@@ -81,7 +81,7 @@
                           VerticalOptions="Fill"
                           HorizontalOptions="Fill">
 
-                        <Label Grid.Row="0" Style="{DynamicResource MediumLabel}" Text="Add Spouse" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Grid.Row="0" Style="{DynamicResource MediumLabel}" Text="Update Spouse" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
                         <Button Grid.Row="1" Style="{DynamicResource BaseButtonStyle}" Text="Search for spouses" FontAttributes="Bold" HorizontalOptions="Fill" Command="{Binding SearchForSpousesCommand}"/>
                         <CollectionView ItemsSource="{Binding SpouseSelectionCollection}"
                                         x:Name="SpouseSelectionList"

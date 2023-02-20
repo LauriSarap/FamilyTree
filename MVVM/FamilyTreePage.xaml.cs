@@ -1,6 +1,7 @@
 using FamilyTree.Logic;
 using FamilyTree.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace FamilyTree.MVVM;
 
@@ -94,7 +95,7 @@ public partial class FamilyTreePage : ContentPage
         }
     }
 
-    private void ClearAllContainers()
+    public void ClearAllContainers()
     {
         PersonName.Text = String.Empty;
         PersonId.Text = String.Empty;
@@ -111,6 +112,8 @@ public partial class FamilyTreePage : ContentPage
 
     public async void GetPeopleToListAsync(object sender, EventArgs e)
     {
+        Debug.WriteLine("GetPeopleToListAsync");
+
         await FamilyTreeManager.UpdatePeopleList();
         People.Clear();
 
