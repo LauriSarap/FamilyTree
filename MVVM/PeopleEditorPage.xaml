@@ -109,10 +109,38 @@
                     </Grid>
                 </Frame>
 
-                <Frame x:Name="AddChildrenFrame" Grid.Column="2" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="15, 50, 15, 50">
-                    <VerticalStackLayout Spacing="5">
-                        <Label Style="{DynamicResource MediumLabel}" Text="Add Children" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    </VerticalStackLayout>
+                <Frame Grid.Column="2" Grid.Row="0" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" Padding="15, 50, 15, 50">
+                    <Grid RowDefinitions="Auto, Auto, *" 
+                          RowSpacing="10" 
+                          Padding="10" 
+                          VerticalOptions="Fill"
+                          HorizontalOptions="Fill">
+
+                        <Label Grid.Row="0" Style="{DynamicResource MediumLabel}" Text="Add child" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Button Grid.Row="1" Style="{DynamicResource BaseButtonStyle}" Text="Search for children" FontAttributes="Bold" HorizontalOptions="Fill" Command="{Binding SearchForChildrenCommand}"/>
+                        <CollectionView ItemsSource="{Binding ChildrenSelectionCollection}"
+                                  x:Name="ChildrenSelectionList"
+                                  SelectionMode="Single"
+                                  Margin="0, 0, 0, 0"
+                                  VerticalScrollBarVisibility="Always"
+                                  Grid.Row="2">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Person">
+                                    <Grid HeightRequest="100" Padding="10">
+                                        <Frame HeightRequest="70" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" VerticalOptions="Fill">
+                                            <Grid ColumnDefinitions="Auto, *" ColumnSpacing="0">
+                                                <VerticalStackLayout Grid.Column="0" VerticalOptions="Fill" Padding="10">
+                                                    <Label Text="{Binding name}" Style="{DynamicResource SmallLabel}"/>
+                                                    <Label Text="{Binding personalId}" Style="{DynamicResource SmallLabel}"/>
+                                                </VerticalStackLayout>
+                                                <Button Margin="0" Grid.Column="1" Text="Select" Style="{DynamicResource BaseButtonStyle}" Clicked="ChildrenSelectionBtnClicked" VerticalOptions="Fill" HorizontalOptions="End"/>
+                                            </Grid>
+                                        </Frame>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
                 </Frame>
             </Grid>
         </VerticalStackLayout>

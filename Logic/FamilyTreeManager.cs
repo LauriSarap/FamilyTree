@@ -77,6 +77,8 @@ namespace FamilyTree.Logic
 
         public static async Task UpdatePeopleList()
         {
+            if(people == null) return;
+
             people.Clear();
             people = await PersonDatabase.LoadAllPersons();
         }
@@ -84,6 +86,11 @@ namespace FamilyTree.Logic
         public static bool DoesPersonExist(string personalId)
         {
             long id = long.Parse(personalId);
+
+            if (people == null)
+            {
+                people = new Dictionary<long, Person>();
+            }
 
             if (people.ContainsKey(id))
             {
@@ -151,6 +158,21 @@ namespace FamilyTree.Logic
             }
         }
 
+        public static async Task AddChildren(long personId, List<long> childrenIdsToAdd)
+        {
+            List<long> newChildren = new();
+
+            foreach (var childId in childrenIdsToAdd)
+            {
+                if (people.ContainsKey(childId))
+                {
+                    newChildren.Add(childId);
+                }
+            }
+
+            await PersonDatabase.AddChildrenToPerson(personId, newChildren);
+        }
+
         // Getters
         public static List<Person> GetParents(Person personWithParents)
         {
@@ -159,14 +181,11 @@ namespace FamilyTree.Logic
 
             if (personWithParents.parentIds.Length > 0)
             {
-                Debug.WriteLine("Found some parents");
-                Debug.WriteLine("Getting them from people: " + people.Count);
                 foreach (var parentId in personWithParents.parentIds)
                 {
                     Person parent = people[parentId];
                     parents.Add(parent);
                 }
-                Debug.WriteLine("Found all parents: " + parents.Count);
             }
 
             return parents;

@@ -13,7 +13,7 @@
 
             <!--*** 1st column ***-->
 
-            <Button Text="Search" Style="{DynamicResource BaseButtonStyle}" HorizontalOptions="Fill" FontAttributes="Bold" Margin="0, 0, 0, 20" Clicked="GetPeopleToListAsync" VerticalOptions="Start" HeightRequest="50"/>
+            <Button Text="Search/Refresh" Style="{DynamicResource BaseButtonStyle}" HorizontalOptions="Fill" FontAttributes="Bold" Margin="0, 0, 0, 20" Clicked="GetPeopleToListAsync" VerticalOptions="Start" HeightRequest="50"/>
             <Frame Grid.Column="0" Grid.Row="0" TranslationY="70" Grid.RowSpan="4" Style="{DynamicResource BaseFrameStyle}" HorizontalOptions="Fill" VerticalOptions="Fill" Padding="10">
                 <Grid RowDefinitions="*" HorizontalOptions="Fill">
                     <ListView ItemsSource="{Binding People}"

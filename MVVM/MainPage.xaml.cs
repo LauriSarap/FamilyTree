@@ -58,6 +58,8 @@ public partial class MainPage : ContentPage
             await FamilyTreeManager.AddParents(p.personalId);
         }
 
+        ImportPeopleBtn.Text = $"Imported from {chosenFile.FileName}!";
+
         await DisplayAlert("Success!", "People were successfully imported!", "Okay");
     }
 }

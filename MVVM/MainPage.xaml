@@ -8,15 +8,23 @@
 
     <VerticalStackLayout VerticalOptions="Center" Spacing="20">
 
-        <Button Text="Import people from a txt file"
-                Command="{Binding ImportFileCommand}"
-                HorizontalOptions="Center"
-                Style="{DynamicResource BaseButtonStyle}"/>
+        <Label Text="Family tree application" Style="{DynamicResource LargeLabel}" FontAttributes="Bold"/>
 
-        <Button Text="Start"
-                Clicked="ToAddPeoplePageBtnClicked"
-                HorizontalOptions="Center"
-                Style="{DynamicResource BaseButtonStyle}"/>
+        <VerticalStackLayout  Spacing="10">
+            <Button Text="Import people from a .txt file"
+                    x:Name="ImportPeopleBtn"
+                    Command="{Binding ImportFileCommand}"
+                    HorizontalOptions="Center"
+                    FontSize="24"
+                    Style="{DynamicResource BaseButtonStyle}"/>
+
+            <Button Text="Start"
+                    Clicked="ToAddPeoplePageBtnClicked"
+                    HorizontalOptions="Center"
+                    FontSize="24"
+                    Style="{DynamicResource BaseButtonStyle}"/>
+
+        </VerticalStackLayout>
 
     </VerticalStackLayout>
 </ContentPage>

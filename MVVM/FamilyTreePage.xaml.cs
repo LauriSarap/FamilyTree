@@ -19,6 +19,8 @@ public partial class FamilyTreePage : ContentPage
         InitializeComponent();
 
         BindingContext = this;
+
+        ClearAllContainers();
     }
 
     private void PersonSelectedFromList(object sender, SelectedItemChangedEventArgs e)
@@ -117,6 +119,7 @@ public partial class FamilyTreePage : ContentPage
         await FamilyTreeManager.UpdatePeopleList();
         People.Clear();
 
+        if (FamilyTreeManager.people == null) return;
         if (FamilyTreeManager.people.Count == 0) return;
         foreach (var person in FamilyTreeManager.people.Values)
         {
