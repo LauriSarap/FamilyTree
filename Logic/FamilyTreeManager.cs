@@ -22,10 +22,16 @@ namespace FamilyTree.Logic
         // Database
         public static Dictionary<long, Person> people = new();
 
+        public static event Action PeopleUpdated;
+        public static void InitalizePeopleEvent() { }
+
         static FamilyTreeManager()
         {
             // Txt database file logic
             TxtDataReader.isInitialized = true;
+
+            PeopleUpdated += InitalizePeopleEvent;
+            Debug.WriteLine("People updated event initialized: " + PeopleUpdated);
 
 
             // Json database file logic
@@ -82,6 +88,13 @@ namespace FamilyTree.Logic
             people.Clear();
             people = await PersonDatabase.LoadAllPersons();
         }
+
+        public static void PeopleUpdatedEventCalled()
+        {
+            PeopleUpdated.Invoke();
+        }
+
+
 
         public static bool DoesPersonExist(string personalId)
         {

@@ -66,6 +66,8 @@ public partial class PeopleEditorPage : ContentPage
 
         await FamilyTreeManager.AddPerson(newPerson);
 
+        FamilyTreeManager.PeopleUpdatedEventCalled();
+
         await DisplayAlert("Success", "Person added successfully!", "OK");
     }
 
@@ -364,6 +366,7 @@ public partial class PeopleEditorPage : ContentPage
         // Remove person from old spouse
         if (SelectedPerson.spouseId != 0)
         {
+            Debug.WriteLine($"Removing spouse from: {FamilyTreeManager.people[SelectedPerson.spouseId].name}");
             await PersonDatabase.RemoveSpouse(SelectedPerson.spouseId);
         }
 
@@ -374,6 +377,8 @@ public partial class PeopleEditorPage : ContentPage
         await FamilyTreeManager.AddSpouse(selectedSpouse.personalId, SelectedPerson.personalId);
 
         SpouseSelectionCollection.Clear();
+
+        FamilyTreeManager.PeopleUpdatedEventCalled();
 
         await DisplayAlert("Success!", $"Selected {selectedSpouse.name} as Spouse", "Okay");
 
@@ -399,6 +404,8 @@ public partial class PeopleEditorPage : ContentPage
         await FamilyTreeManager.AddParents(selectedChild.personalId);
 
         ChildrenSelectionCollection.Clear();
+
+        FamilyTreeManager.PeopleUpdatedEventCalled();
 
         await DisplayAlert("Success!", $"Selected {selectedChild.name} as Child", "Okay");
     }

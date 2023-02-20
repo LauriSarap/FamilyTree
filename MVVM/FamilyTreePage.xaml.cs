@@ -21,6 +21,9 @@ public partial class FamilyTreePage : ContentPage
         BindingContext = this;
 
         ClearAllContainers();
+
+        FamilyTreeManager.PeopleUpdated += ClearAllContainers;
+        FamilyTreeManager.PeopleUpdated += ClearList;
     }
 
     private void PersonSelectedFromList(object sender, SelectedItemChangedEventArgs e)
@@ -110,6 +113,11 @@ public partial class FamilyTreePage : ContentPage
         PersonsSiblings.Clear();
         PersonsChildren.Clear();
         PersonsGrandChildren.Clear();
+    }
+
+    public void ClearList()
+    {
+        People.Clear();
     }
 
     public async void GetPeopleToListAsync(object sender, EventArgs e)
