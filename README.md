@@ -23,5 +23,5 @@ This application was built for the ASI Karikas 2023 competition. One of the goal
 * People have 11 digit long ids
 * Second id is their spouse's id
 * After the spouse id come children ids
-### .txt file
+### Example .txt file
 `*JaanM*37306102531*47505112752*50208122711*60401012737*#*MariM*47505112752*37306102531*50208122711*60401012737*#*LauraM*60401012737*0*#*JoonasM*50208122711*0*#`
