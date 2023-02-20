@@ -4,6 +4,7 @@ This application was built for the ASI Karikas 2023 competition. One of the goal
 # Installation
 
 * Clone or download the repository to your local machine.
+* Make sure that you have WINDOWS 10
 * Open the solution in Visual Studio.
   * Make sure you have .NET Maui installed
   * Application uses .NET 6.0
